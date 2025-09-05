@@ -22,7 +22,7 @@ We are!
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸福记录</title>
+    幸福记录
 </head>
 <body>
     <a href="https://weibo.com/u/5679371384" target="_blank"><h2>幸福！</h2></a><br />
