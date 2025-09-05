@@ -5,7 +5,7 @@ We are!
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸福的开始！</title>
+    幸福的开始！
 </head>
 <body>
     <a href="https://wx1.sinaimg.cn/orj360/006cm3Wgly1ho1dh1rcg8j30u0140n6w.jpg" target="_blank">花花🌼</a><br />
