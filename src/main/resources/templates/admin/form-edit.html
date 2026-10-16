@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('编辑表单')"></head>
+<body>
+<nav th:replace="layout :: navbar('home')"></nav>
+
+<main class="container">
+    <!-- Flash 消息 -->
+    <div th:if="${msg}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${msg}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- 未持久化的新表单：显示创建表单 -->
+    <div th:if="${form.id == null}" class="row justify-content-center">
+        <div class="col-lg-6">
+            <h3 class="mb-3">创建新表单</h3>
+            <form method="post" th:action="@{/admin/forms/new}" class="fc-card p-4 bg-white">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">表单标题 <span class="text-danger">*</span></label>
+                    <input name="title" class="form-control" required maxlength="200"
+                           placeholder="例如：2026 校园活动报名">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">说明（可选）</label>
+                    <textarea name="description" class="form-control" rows="3"
+                              placeholder="给填写者看的提示文字..."></textarea>
+                </div>
+                <button class="btn btn-primary">创建并开始编辑</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 已存在的表单：编辑 -->
+    <div th:if="${form.id != null}">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <h3 class="mb-1" th:text="${form.title}"></h3>
+                <div class="text-muted small">
+                    公开链接：<code th:text="${'/f/' + form.slug}" class="me-2"></code>
+                    <a th:href="@{/f/{slug}(slug=${form.slug})}" target="_blank"
+                       class="btn btn-sm btn-outline-primary">打开填写页 →</a>
+                    <a th:href="@{/f/{slug}/export(slug=${form.slug})}"
+                       class="btn btn-sm btn-outline-success ms-1">导出 CSV</a>
+                    <a th:href="@{/admin/forms/{id}/submissions(id=${form.id})}"
+                       class="btn btn-sm btn-outline-secondary ms-1">查看提交
+                       <span class="badge rounded-pill bg-secondary" th:text="${submissionCount}"></span>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <form method="post" th:action="@{/admin/forms/{id}/toggle(id=${form.id})}"
+                      class="d-inline">
+                    <button class="btn btn-sm"
+                            th:classappend="${form.enabled} ? 'btn-warning' : 'btn-success'">
+                        <span th:text="${form.enabled} ? '关闭表单' : '开启表单'"></span>
+                    </button>
+                </form>
+                <form method="post" th:action="@{/admin/forms/{id}/delete(id=${form.id})}"
+                      class="d-inline" onsubmit="return confirm('确认删除该表单？提交记录一并清除')">
+                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 左：基本信息 -->
+            <div class="col-lg-5 mb-4">
+                <div class="fc-card p-4 bg-white">
+                    <h5 class="mb-3">基本设置</h5>
+                    <form method="post" th:action="@{/admin/forms/{id}/update(id=${form.id})}">
+                        <div class="mb-3">
+                            <label class="form-label">标题</label>
+                            <input name="title" class="form-control" required maxlength="200"
+                                   th:value="${form.title}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">说明</label>
+                            <textarea name="description" class="form-control" rows="3"
+                                      th:text="${form.description}"></textarea>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label">截止时间</label>
+                            <input name="deadline" type="datetime-local" class="form-control"
+                                   th:value="${form.deadline != null} ? ${#temporals.format(form.deadline.atOffset(T(java.time.ZoneOffset).ofHours(8)), 'yyyy-MM-dd\\'T\\'HH:mm')} : ''">
+                            <div class="form-text">留空表示永不截止</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">名额限制</label>
+                            <input name="quota" type="number" min="0" class="form-control"
+                                   th:value="${form.quota}">
+                            <div class="form-text">留空或 0 表示不限制</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">访问密码</label>
+                            <input name="accessCode" class="form-control"
+                                   th:value="${form.accessCode}"
+                                   placeholder="留空表示无需密码">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">防重复策略</label>
+                            <input name="dedupStrategies" class="form-control"
+                                   th:value="${form.dedupStrategies}"
+                                   placeholder="cookie,ip">
+                            <div class="form-text">可选：cookie / ip / email，逗号分隔</div>
+                        </div>
+                        <button class="btn btn-primary w-100">保存设置</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 右：字段编辑（客户端渲染） -->
+            <div class="col-lg-7 mb-4">
+                <div class="fc-card p-4 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">字段列表</h5>
+                        <span class="text-muted small">共 <span th:text="${form.fields.size()}"></span> 项</span>
+                    </div>
+                    <div id="field-list">
+                        <!-- 字段由 JS 渲染，初始值从后端注入 -->
+                    </div>
+                    <button type="button" id="add-field-btn" class="btn btn-outline-primary mt-2 w-100">
+                        + 添加字段
+                    </button>
+
+                    <hr>
+                    <div class="d-flex gap-2">
+                        <button type="button" id="save-fields-btn" class="btn btn-primary flex-grow-1">
+                            保存字段
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="layout :: footer"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+// 注入初始字段数据
+const FORM_ID = /*[[${form.id != null}]]*/ null;
+const EXISTING_FIELDS = /*[[${form.fields}]]*/ [];
+
+const FIELD_TYPES = [
+    { value: 'TEXT',     label: '单行文本' },
+    { value: 'TEXTAREA', label: '多行文本' },
+    { value: 'NUMBER',   label: '数字' },
+    { value: 'DATE',     label: '日期' },
+    { value: 'EMAIL',    label: '邮箱' },
+    { value: 'RADIO',    label: '单选' },
+    { value: 'CHECKBOX', label: '多选' },
+    { value: 'SELECT',   label: '下拉框' },
+    { value: 'FILE',     label: '文件上传' }
+];
+
+function newField() {
+    return {
+        id: null, name: 'f_' + Date.now(), label: '新字段',
+        type: 'TEXT', required: false, placeholder: '',
+        defaultValue: '', options: '', sortOrder: 0
+    };
+}
+
+let fields = EXISTING_FIELDS.length ? EXISTING_FIELDS.map(f => ({ ...f })) : [];
+
+function render() {
+    const list = document.getElementById('field-list');
+    list.innerHTML = '';
+    fields.forEach((f, idx) => {
+        list.appendChild(renderFieldItem(f, idx));
+    });
+}
+
+function renderFieldItem(f, idx) {
+    const el = document.createElement('div');
+    el.className = 'field-item';
+
+    const typesHtml = FIELD_TYPES.map(t =>
+        `<option value="${t.value}" ${t.value === f.type ? 'selected' : ''}>${t.label}</option>`
+    ).join('');
+
+    el.innerHTML = `
+        <div class="field-header">
+            <span class="fw-bold">#${idx + 1}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-act="del">删除</button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label small">标签（显示给用户）</label>
+                <input class="form-control form-label" value="${f.label || ''}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small">字段名（英文，内部 key）</label>
+                <input class="form-control field-name" value="${f.name || ''}" placeholder="例如：name">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small">类型</label>
+                <select class="form-select field-type">${typesHtml}</select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <div class="form-check">
+                    <input class="form-check-input field-required" type="checkbox"
+                           id="req_${idx}" ${f.required ? 'checked' : ''}>
+                    <label class="form-check-label small" for="req_${idx}">必填</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">占位提示</label>
+                <input class="form-control field-placeholder" value="${f.placeholder || ''}">
+            </div>
+            <div class="col-md-3" id="opts_${idx}"
+                 style="${['RADIO','CHECKBOX','SELECT'].includes(f.type) ? '' : 'display:none'}">
+                <label class="form-label small">选项（逗号分隔）</label>
+                <input class="form-control field-options"
+                       value="${(f.options || '').replace(/"/g, '&quot;')}"
+                       placeholder="选项A, 选项B, 选项C">
+            </div>
+        </div>
+    `;
+
+    // 绑定事件
+    el.querySelector('[data-act="del"]').onclick = () => {
+        if (confirm('删除该字段？')) { fields.splice(idx, 1); render(); }
+    };
+    el.querySelectorAll('input,select').forEach(inp => {
+        inp.oninput = () => {
+            f.label        = el.querySelector('.form-label').value;
+            f.name         = el.querySelector('.field-name').value;
+            f.type         = el.querySelector('.field-type').value;
+            f.required     = el.querySelector('.field-required').checked;
+            f.placeholder  = el.querySelector('.field-placeholder').value;
+            f.options      = el.querySelector('.field-options').value;
+            // 切换 options 显示
+            const optsBox = el.querySelector(`#opts_${idx}`);
+            if (optsBox) {
+                optsBox.style.display = ['RADIO','CHECKBOX','SELECT'].includes(f.type) ? '' : 'none';
+            }
+        };
+    });
+    return el;
+}
+
+document.getElementById('add-field-btn').onclick = () => {
+    fields.push(newField());
+    render();
+};
+
+document.getElementById('save-fields-btn').onclick = async () => {
+    if (!FORM_ID) { alert('请先创建表单主体再编辑字段'); return; }
+    fields.forEach((f, i) => f.sortOrder = i);
+    const resp = await fetch(`/admin/forms/${FORM_ID}/fields`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fields)
+    });
+    const r = await resp.json();
+    if (r.ok) {
+        alert('字段已保存');
+    } else {
+        alert('保存失败：' + r.message);
+    }
+};
+
+render();
+/*]]>*/
+</script>
+</body>
+</html>

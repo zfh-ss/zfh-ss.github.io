@@ -1,0 +1,74 @@
+/* FormCatch 自定义样式 */
+:root {
+    --fc-primary: #4f46e5;
+}
+
+body {
+    background: #f8fafc;
+}
+
+.fc-card {
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+}
+
+.fc-badge {
+    font-size: .75rem;
+}
+
+.field-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: .75rem;
+    background: white;
+}
+
+.field-item .field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .75rem;
+}
+
+/* 公开填写页 */
+.form-view-card {
+    max-width: 680px;
+    margin: 2rem auto;
+}
+
+.form-view-card h1 {
+    font-weight: 600;
+}
+
+.required-mark::after {
+    content: " *";
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* 提交成功提示 */
+.toast-float {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1060;
+}
+
+/* 表格 */
+.table th {
+    font-weight: 600;
+    color: #475569;
+}
+
+/* 状态点 */
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+.dot.green { background: #16a34a; }
+.dot.gray  { background: #94a3b8; }
+.dot.red   { background: #dc2626; }

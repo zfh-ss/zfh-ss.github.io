@@ -1,0 +1,29 @@
+# Java
+*.class
+*.jar
+*.war
+*.log
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# H2 Database
+data/
+*.mv.db
+*.trace.db
+
+# Uploads
+uploads/
+
+# OS
+.DS_Store
+Thumbs.db
