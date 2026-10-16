@@ -14,8 +14,8 @@
     <!-- 未持久化的新表单：显示创建表单 -->
     <div th:if="${form.id == null}" class="row justify-content-center">
         <div class="col-lg-6">
-            <h3 class="mb-3">创建新表单</h3>
-            <form method="post" th:action="@{/admin/forms/new}" class="fc-card p-4 bg-white">
+            <h1 class="page-title mb-3">创建新表单</h1>
+            <form method="post" th:action="@{/admin/forms/new}" class="fc-card fc-card-pad">
                 <div class="mb-3">
                     <label class="form-label fw-bold">表单标题 <span class="text-danger">*</span></label>
                     <input name="title" class="form-control" required maxlength="200"
@@ -35,16 +35,16 @@
     <div th:if="${form.id != null}">
         <div class="d-flex justify-content-between align-items-start mb-3">
             <div>
-                <h3 class="mb-1" th:text="${form.title}"></h3>
-                <div class="text-muted small">
-                    公开链接：<code th:text="${'/f/' + form.slug}" class="me-2"></code>
+                <h1 class="page-title mb-1" th:text="${form.title}"></h1>
+                <div class="page-sub">
+                    公开链接：<span class="fc-code" th:text="${'/f/' + form.slug}"></span>
                     <a th:href="@{/f/{slug}(slug=${form.slug})}" target="_blank"
-                       class="btn btn-sm btn-outline-primary">打开填写页 →</a>
+                       class="btn btn-sm btn-outline-primary ms-2">打开填写页 →</a>
                     <a th:href="@{/f/{slug}/export(slug=${form.slug})}"
-                       class="btn btn-sm btn-outline-success ms-1">导出 CSV</a>
+                       class="btn btn-sm btn-outline-secondary ms-1">导出 CSV</a>
                     <a th:href="@{/admin/forms/{id}/submissions(id=${form.id})}"
                        class="btn btn-sm btn-outline-secondary ms-1">查看提交
-                       <span class="badge rounded-pill bg-secondary" th:text="${submissionCount}"></span>
+                       <span class="fc-badge" th:text="${submissionCount}"></span>
                     </a>
                 </div>
             </div>
@@ -66,8 +66,8 @@
         <div class="row">
             <!-- 左：基本信息 -->
             <div class="col-lg-5 mb-4">
-                <div class="fc-card p-4 bg-white">
-                    <h5 class="mb-3">基本设置</h5>
+                <div class="fc-card fc-card-pad">
+                    <h2 class="section-title mb-3">基本设置</h2>
                     <form method="post" th:action="@{/admin/forms/{id}/update(id=${form.id})}">
                         <div class="mb-3">
                             <label class="form-label">标题</label>
@@ -112,10 +112,10 @@
 
             <!-- 右：字段编辑（客户端渲染） -->
             <div class="col-lg-7 mb-4">
-                <div class="fc-card p-4 bg-white">
+                <div class="fc-card fc-card-pad">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">字段列表</h5>
-                        <span class="text-muted small">共 <span th:text="${form.fields.size()}"></span> 项</span>
+                        <h2 class="section-title mb-0">字段列表</h2>
+                        <span class="fc-meta">共 <span th:text="${form.fields.size()}"></span> 项</span>
                     </div>
                     <div id="field-list">
                         <!-- 字段由 JS 渲染，初始值从后端注入 -->
@@ -192,7 +192,7 @@ function renderFieldItem(f, idx) {
         <div class="row g-2">
             <div class="col-md-6">
                 <label class="form-label small">标签（显示给用户）</label>
-                <input class="form-control form-label" value="${f.label || ''}">
+                <input class="form-control field-label" value="${f.label || ''}">
             </div>
             <div class="col-md-6">
                 <label class="form-label small">字段名（英文，内部 key）</label>
@@ -229,7 +229,7 @@ function renderFieldItem(f, idx) {
     };
     el.querySelectorAll('input,select').forEach(inp => {
         inp.oninput = () => {
-            f.label        = el.querySelector('.form-label').value;
+            f.label        = el.querySelector('.field-label').value;
             f.name         = el.querySelector('.field-name').value;
             f.type         = el.querySelector('.field-type').value;
             f.required     = el.querySelector('.field-required').checked;

@@ -1,74 +1,280 @@
-/* FormCatch 自定义样式 */
+/* =========================================================
+   FormCatch · 简洁浅色主题
+   ========================================================= */
+
 :root {
-    --fc-primary: #4f46e5;
+    --fc-accent: #2563eb;
+    --fc-accent-dark: #1d4ed8;
+    --fc-accent-soft: #eef3ff;
+    --fc-bg: #f7f8fa;
+    --fc-card: #ffffff;
+    --fc-border: #e8eaed;
+    --fc-text: #1f2328;
+    --fc-muted: #6b7280;
+    --fc-radius: 10px;
 }
 
+/* ---------- 全局 ---------- */
 body {
-    background: #f8fafc;
+    background: var(--fc-bg);
+    color: var(--fc-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
 }
 
+a { text-decoration: none; }
+
+/* ---------- 覆盖 Bootstrap 主色 ---------- */
+.btn-primary {
+    --bs-btn-bg: var(--fc-accent);
+    --bs-btn-border-color: var(--fc-accent);
+    --bs-btn-hover-bg: var(--fc-accent-dark);
+    --bs-btn-hover-border-color: var(--fc-accent-dark);
+    --bs-btn-active-bg: var(--fc-accent-dark);
+    --bs-btn-active-border-color: var(--fc-accent-dark);
+    --bs-btn-disabled-bg: #a9c1f5;
+    --bs-btn-disabled-border-color: #a9c1f5;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--fc-accent);
+    --bs-btn-border-color: #c7d5f8;
+    --bs-btn-hover-bg: var(--fc-accent);
+    --bs-btn-hover-border-color: var(--fc-accent);
+    --bs-btn-active-bg: var(--fc-accent-dark);
+    --bs-btn-active-border-color: var(--fc-accent-dark);
+}
+
+.btn { border-radius: 7px; font-size: .875rem; }
+.btn-sm { border-radius: 6px; font-size: .82rem; }
+
+.form-control, .form-select {
+    border-color: #dfe3e8;
+    border-radius: 7px;
+    font-size: .9rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #a9c1f5;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+}
+.form-label { font-size: .885rem; font-weight: 500; color: #374151; }
+.form-text { font-size: .78rem; color: #9aa1ab; }
+
+/* ---------- 顶部导航 ---------- */
+.fc-navbar {
+    background: #fff;
+    border-bottom: 1px solid var(--fc-border);
+}
+.fc-navbar .navbar-brand {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--fc-text);
+    letter-spacing: -.01em;
+}
+.fc-navbar .nav-link {
+    color: var(--fc-muted);
+    font-size: .925rem;
+    padding: .35rem .7rem;
+    border-radius: 6px;
+}
+.fc-navbar .nav-link:hover { color: var(--fc-text); background: #f2f4f7; }
+.fc-navbar .nav-link.active { color: var(--fc-accent); background: var(--fc-accent-soft); font-weight: 500; }
+
+/* Logo 方块 */
+.fc-logo {
+    display: inline-flex;
+    width: 22px; height: 22px;
+    align-items: center;
+    justify-content: center;
+    background: var(--fc-accent);
+    color: #fff;
+    border-radius: 6px;
+    font-size: .78rem;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: -3px;
+    margin-right: 2px;
+}
+
+/* ---------- 卡片 ---------- */
 .fc-card {
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    background: var(--fc-card);
+    border: 1px solid var(--fc-border);
+    border-radius: var(--fc-radius);
+}
+.fc-card-pad { padding: 1.25rem 1.4rem; }
+
+/* ---------- 标题 ---------- */
+.page-title { font-size: 1.15rem; font-weight: 600; letter-spacing: -.01em; margin: 0; }
+.page-sub { font-size: .84rem; color: var(--fc-muted); }
+.section-title { font-size: .95rem; font-weight: 600; margin: 0; }
+
+/* ---------- 表格 ---------- */
+.fc-table { width: 100%; margin: 0; }
+.fc-table thead th {
+    background: #fafbfc;
+    border-bottom: 1px solid var(--fc-border);
+    color: var(--fc-muted);
+    font-weight: 500;
+    font-size: .815rem;
+    padding: .7rem 1rem;
+    white-space: nowrap;
+}
+.fc-table tbody td {
+    padding: .8rem 1rem;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: .885rem;
+    vertical-align: middle;
+}
+.fc-table tbody tr:last-child td { border-bottom: 0; }
+.fc-table tbody tr:hover { background: #fafbfc; }
+
+/* ---------- 搜索框 ---------- */
+.fc-search { width: 200px; }
+
+/* ---------- 空状态 ---------- */
+.fc-empty {
+    padding: 3.5rem 1rem;
+    text-align: center;
+    color: var(--fc-muted);
+    font-size: .9rem;
 }
 
+/* ---------- 链接短码 ---------- */
+.fc-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .79rem;
+    color: var(--fc-accent);
+    background: var(--fc-accent-soft);
+    padding: .15rem .45rem;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+/* ---------- 状态点 ---------- */
+.dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.dot.green { background: #22c55e; }
+.dot.gray  { background: #cbd5e1; }
+.dot.red   { background: #ef4444; }
+
+/* ---------- 轻量徽标 ---------- */
 .fc-badge {
+    display: inline-block;
+    padding: .1rem .5rem;
+    border-radius: 999px;
+    background: #f1f3f5;
+    color: #4b5563;
     font-size: .75rem;
+    line-height: 1.5;
+    vertical-align: middle;
 }
+.fc-badge.accent { background: var(--fc-accent-soft); color: var(--fc-accent); }
 
+/* ---------- 字段编辑器 ---------- */
 .field-item {
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--fc-border);
     border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: .75rem;
-    background: white;
+    padding: .9rem 1rem;
+    margin-bottom: .6rem;
+    background: #fff;
+    transition: border-color .15s;
 }
-
+.field-item:hover { border-color: #d7dbe0; }
 .field-item .field-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: .75rem;
+    margin-bottom: .7rem;
 }
+.field-index { font-size: .78rem; color: var(--fc-muted); font-weight: 500; }
 
-/* 公开填写页 */
-.form-view-card {
-    max-width: 680px;
-    margin: 2rem auto;
-}
-
-.form-view-card h1 {
-    font-weight: 600;
-}
-
+/* ---------- 必填标记 ---------- */
 .required-mark::after {
-    content: " *";
-    color: #dc2626;
+    content: "*";
+    color: #ef4444;
+    margin-left: 3px;
     font-weight: 600;
 }
 
-/* 提交成功提示 */
-.toast-float {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1060;
-}
-
-/* 表格 */
-.table th {
+/* ---------- 公开填写页 ---------- */
+.form-view-card { max-width: 640px; margin: 2.5rem auto 3rem; }
+.form-view-card h1 {
+    font-size: 1.45rem;
     font-weight: 600;
-    color: #475569;
+    letter-spacing: -.02em;
+    margin-bottom: .35rem;
+}
+.fc-field { margin-bottom: 1.4rem; }
+.fc-meta { font-size: .83rem; color: var(--fc-muted); }
+
+/* ---------- 浅色代码块（JSON 预览） ---------- */
+.fc-code-block {
+    background: #f8f9fb;
+    border: 1px solid var(--fc-border);
+    border-radius: 8px;
+    padding: .9rem 1rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .79rem;
+    line-height: 1.6;
+    color: #374151;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+    max-height: 420px;
+    overflow: auto;
 }
 
-/* 状态点 */
-.dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 4px;
+/* ---------- 字段值列表 ---------- */
+.fc-kv { margin: 0; }
+.fc-kv dt {
+    font-size: .8rem;
+    color: var(--fc-muted);
+    font-weight: 400;
+    padding-top: .55rem;
 }
-.dot.green { background: #16a34a; }
-.dot.gray  { background: #94a3b8; }
-.dot.red   { background: #dc2626; }
+.fc-kv dd {
+    font-size: .9rem;
+    margin-bottom: 0;
+    padding-bottom: .55rem;
+    border-bottom: 1px solid #f1f3f5;
+    word-break: break-all;
+}
+.fc-kv dd:last-of-type { border-bottom: 0; }
+
+/* ---------- 提示条 ---------- */
+.alert {
+    border-radius: 8px;
+    font-size: .875rem;
+    border-width: 1px;
+}
+.alert-success { background: #f0fdf4; border-color: #dcfce7; color: #15803d; }
+.alert-danger  { background: #fef2f2; border-color: #fee2e2; color: #b91c1c; }
+.alert-warning { background: #fffbeb; border-color: #fef3c7; color: #b45309; }
+
+/* ---------- 分页 ---------- */
+.pagination { --bs-pagination-font-size: .85rem; }
+.pagination .page-link { border-color: var(--fc-border); color: var(--fc-muted); }
+.pagination .page-link:hover { background: #f2f4f7; color: var(--fc-text); }
+.pagination .page-item.active .page-link {
+    background: var(--fc-accent);
+    border-color: var(--fc-accent);
+    color: #fff;
+}
+
+/* ---------- 页脚 ---------- */
+.fc-footer {
+    text-align: center;
+    color: var(--fc-muted);
+    font-size: .8rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--fc-border);
+    margin-top: 3rem;
+}

@@ -1,5 +1,6 @@
 package com.formcatch.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class FormField {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "form_id", nullable = false)
+    @JsonIgnore
     private Form form;
 
     /** 字段标识（用于 JSON key，英文下划线） */

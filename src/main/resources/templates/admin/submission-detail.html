@@ -7,8 +7,8 @@
 <main class="container">
     <div class="mb-3">
         <a th:href="@{/admin/forms/{id}/submissions(id=${form.id})}" class="text-muted">← 返回提交列表</a>
-        <h3 class="mt-2">提交详情 #<span th:text="${submission.id}"></span></h3>
-        <div class="text-muted small">
+        <h1 class="page-title mt-2">提交详情 #<span th:text="${submission.id}"></span></h1>
+        <div class="page-sub">
             提交时间 <span th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
             · IP <span th:text="${submission.ipAddress}"></span>
         </div>
@@ -16,15 +16,15 @@
 
     <div class="row">
         <div class="col-lg-6">
-            <div class="fc-card p-4 bg-white">
-                <h5 class="mb-3">字段值</h5>
-                <dl class="row" id="kv-pairs"></dl>
+            <div class="fc-card fc-card-pad">
+                <h2 class="section-title mb-3">字段值</h2>
+                <dl class="fc-kv" id="kv-pairs"></dl>
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="fc-card p-4 bg-white">
-                <h5 class="mb-3">原始 JSON</h5>
-                <pre class="bg-dark text-light p-3 rounded small" th:text="${submission.dataJson}"></pre>
+            <div class="fc-card fc-card-pad">
+                <h2 class="section-title mb-3">原始 JSON</h2>
+                <pre class="fc-code-block" th:text="${submission.dataJson}"></pre>
             </div>
         </div>
     </div>
@@ -48,10 +48,8 @@ FIELDS.forEach(f => {
         : Array.isArray(val) ? val.join('; ')
         : String(val);
     const dt = document.createElement('dt');
-    dt.className = 'col-sm-4 text-muted small';
     dt.textContent = f.label + (f.required ? ' *' : '');
     const dd = document.createElement('dd');
-    dd.className = 'col-sm-8 small';
     dd.textContent = valStr || '(空)';
     ddl.appendChild(dt);
     ddl.appendChild(dd);

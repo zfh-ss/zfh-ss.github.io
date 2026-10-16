@@ -7,8 +7,8 @@
 <main class="container">
     <div class="mb-3">
         <a th:href="@{/admin}" class="text-muted">← 返回表单列表</a>
-        <h3 class="mt-2" th:text="${form.title}"></h3>
-        <div class="text-muted small">
+        <h1 class="page-title mt-2" th:text="${form.title}"></h1>
+        <div class="page-sub">
             共 <span th:text="${submissions.totalElements}"></span> 条提交
             · 当前第 <span th:text="${submissions.number + 1}"></span> 页
             · <a th:href="@{/f/{slug}/export(slug=${form.slug})}">导出全部 CSV</a>
@@ -16,8 +16,8 @@
     </div>
 
     <div class="fc-card table-responsive">
-        <table class="table table-hover mb-0 align-middle">
-            <thead class="table-light">
+        <table class="fc-table">
+            <thead>
             <tr>
                 <th>#</th>
                 <th>提交时间</th>
@@ -28,14 +28,14 @@
             </thead>
             <tbody>
             <tr th:if="${submissions.totalElements == 0}">
-                <td colspan="5" class="text-center text-muted py-5">还没有提交记录</td>
+                <td colspan="5" class="fc-empty">还没有提交记录</td>
             </tr>
             <tr th:each="sub : ${submissions.content}">
                 <td th:text="${sub.id}"></td>
                 <td th:text="${#temporals.format(sub.submittedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td th:text="${sub.ipAddress}"></td>
                 <td>
-                    <code class="small text-truncate d-block"
+                    <code class="text-muted small d-block text-truncate" style="max-width: 360px;"
                           th:text="${sub.dataJson.length() > 80} ? ${sub.dataJson.substring(0, 80) + '...'} : ${sub.dataJson}"></code>
                 </td>
                 <td class="text-end">
