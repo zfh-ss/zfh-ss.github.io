@@ -4,6 +4,7 @@ import com.formcatch.entity.Submission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,9 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
                                         @Param("since") LocalDateTime since);
 
     boolean existsByFormIdAndIpAddress(Long formId, String ipAddress);
+
+    /** 删除某表单下的全部提交（用于删除表单前清理，避免外键约束冲突） */
+    @Modifying
+    @Query("DELETE FROM Submission s WHERE s.form.id = :formId")
+    int deleteByFormId(@Param("formId") Long formId);
 }

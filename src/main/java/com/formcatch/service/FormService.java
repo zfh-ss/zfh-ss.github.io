@@ -4,6 +4,7 @@ import com.formcatch.entity.FieldType;
 import com.formcatch.entity.Form;
 import com.formcatch.entity.FormField;
 import com.formcatch.repository.FormRepository;
+import com.formcatch.repository.SubmissionRepository;
 import com.formcatch.util.SlugGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class FormService {
 
     private final FormRepository formRepository;
+    private final SubmissionRepository submissionRepository;
 
     /** 创建空表单（仅标题） */
     @Transactional
@@ -63,9 +65,10 @@ public class FormService {
         return formRepository.findByTitleContaining(keyword.trim(), pageable);
     }
 
-    /** 删除 */
+    /** 删除（先清理该表单下的提交，避免外键约束冲突） */
     @Transactional
     public void delete(Long id) {
+        submissionRepository.deleteByFormId(id);
         formRepository.deleteById(id);
     }
 
