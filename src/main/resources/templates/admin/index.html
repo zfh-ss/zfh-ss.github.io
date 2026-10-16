@@ -65,10 +65,16 @@
                 <td th:text="${f.fields.size()}"></td>
                 <td class="page-sub" th:text="${#temporals.format(f.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                 <td class="text-end">
+                    <a th:href="@{/admin/forms/{id}/edit(id=${f.id})}"
+                       class="btn btn-sm btn-outline-secondary">编辑</a>
                     <a th:href="@{/admin/forms/{id}/submissions(id=${f.id})}"
-                       class="btn btn-sm btn-outline-primary">查看提交</a>
+                       class="btn btn-sm btn-outline-primary ms-1">查看提交</a>
                     <a th:href="@{/f/{slug}/export(slug=${f.slug})}"
                        class="btn btn-sm btn-outline-secondary ms-1">导出 CSV</a>
+                    <form method="post" th:action="@{/admin/forms/{id}/delete(id=${f.id})}"
+                          class="d-inline" onsubmit="return confirm('确认删除该表单？该表单的提交记录将一并清除，且不可恢复。')">
+                        <button class="btn btn-sm btn-outline-danger ms-1">删除</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
