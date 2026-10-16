@@ -1,0 +1,14 @@
+services:
+  formcatch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: formcatch
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped

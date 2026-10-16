@@ -48,16 +48,40 @@ public class PublicFormController {
             return "error/404";
         }
         Form form = opt.get();
+
+        // 密码保护检查
+        if (form.getAccessCode() != null && !form.getAccessCode().isBlank()) {
+            Object passed = request.getSession().getAttribute("fc_passed_" + form.getId());
+            if (!Boolean.TRUE.equals(passed)) {
+                model.addAttribute("slug", slug);
+                return "public/form-password";
+            }
+        }
+
         model.addAttribute("form", form);
         model.addAttribute("submissionCount",
                 submissionService.countByForm(form.getId()));
 
-        // 如果已提交过，提示
         String token = getOrCreateToken(request, response);
         model.addAttribute("token", token);
         model.addAttribute("closed", !form.isAccepting());
 
         return "public/form-view";
+    }
+
+    /** 密码校验 */
+    @PostMapping("/{slug}/unlock")
+    public String unlockForm(@PathVariable String slug,
+                             @RequestParam String accessCode,
+                             HttpServletRequest request,
+                             RedirectAttributes ra) {
+        Form form = formService.findBySlug(slug).orElseThrow();
+        if (form.getAccessCode() != null && form.getAccessCode().equals(accessCode)) {
+            request.getSession().setAttribute("fc_passed_" + form.getId(), true);
+            return "redirect:/f/" + slug;
+        }
+        ra.addFlashAttribute("pwdError", "密码错误，请重试");
+        return "redirect:/f/" + slug;
     }
 
     /** 处理提交（multipart form） */
